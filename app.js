@@ -34,7 +34,8 @@ if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 // CORs
 // app.use(cors());
 const allowedOrigins = [
-  'https://full-stack-social-app.vercel.app',
+  // 'https://full-stack-social-app.vercel.app',
+  'https://dark-space-omega.vercel.app/',
   'http://localhost:5173', // Your React app's URL
 ];
 
