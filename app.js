@@ -11,6 +11,7 @@ const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
     origin: [
+      'https://dark-space-omega.vercel.app',
       'https://full-stack-social-app.vercel.app',
       'http://localhost:5173',
     ],
@@ -80,9 +81,10 @@ app.use(globalErrorHandler);
 
 // connection
 mongoose
-  .connect(process.env.LOCAL_DB_URL)
-  .then(() => console.log('connection success'))
-  .catch(() => console.log('failed to connect to DB'));
+.connect(process.env.DATABASE_URI)
+.then(() => console.log('connection success'))
+.catch(() => console.log('failed to connect to DB'));
+// .connect(process.env.LOCAL_DB_URL)
 
 // listen
 server.listen(process.env.PORT, () =>

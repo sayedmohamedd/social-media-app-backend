@@ -37,9 +37,9 @@ const createSendToken = (user, statusCode, res) => {
 
 exports.signup = catchAsync(async (req, res, next) => {
   // Check if image uploaded successfully
-  if (!req.file) {
-    return next(new AppError('failed to upload the image', 400));
-  }
+  // if (!req.file) {
+  //   return next(new AppError('failed to upload the image', 400));
+  // }
 
   const {
     firstname,
@@ -59,7 +59,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordConfirm,
     bio,
     birthdate,
-    picture: req.file.path,
+    // picture: req.file.path,
   });
 
   createSendToken(newUser, 201, res);
