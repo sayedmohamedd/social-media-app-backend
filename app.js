@@ -60,6 +60,13 @@ app.use(express.urlencoded({ extended: true }));
 // Parse Cookies
 app.use(cookieParser());
 
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'Welcome to the API',
+  });
+})
+
 // routes
 app.use('/api/v1/users', userRoute);
 app.use('/api/v1/posts', postRoute);
