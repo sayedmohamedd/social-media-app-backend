@@ -80,7 +80,7 @@ app.use(globalErrorHandler);
 
 // connection
 mongoose
-  .connect(process.env.DB_URL)
+  .connect(process.env.LOCAL_DB_URL)
   .then(() => console.log('connection success'))
   .catch(() => console.log('failed to connect to DB'));
 

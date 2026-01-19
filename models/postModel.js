@@ -2,31 +2,18 @@ const { Schema, model, Types } = require('mongoose');
 
 const postSchema = new Schema(
   {
-    user: {
-      type: Types.ObjectId,
-      ref: 'User',
-      required: [true, 'The post must have a creator'],
-    },
-    description: {
-      type: String,
-      trim: true,
-      required: true,
-    },
+    user: { type: Types.ObjectId, ref: 'User', required: true },
+    description: { type: String, trim: true, required: true },
     media: [String],
     tags: {
       type: [Types.ObjectId],
       ref: 'User',
     },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now,
-    },
+    tags: [{ type: Types.ObjectId, ref: 'User' }],
+    likesCount: { type: Number, default: 0 },
+    commentsCount: { type: Number, default: 0 },
   },
-  { toJSON: { virtuals: true }, toObject: { virtuals: true } }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
 // Virtual field for comments
@@ -54,6 +41,9 @@ postSchema.pre(/^find/, function (next) {
     .select('-__v -updatedAt'); // Populate likes
   next();
 });
+
+// Indexes
+postSchema.index({ user: 1, createdAt: -1 });
 
 const Post = model('Post', postSchema);
 

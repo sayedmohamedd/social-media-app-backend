@@ -2,23 +2,11 @@ const { model, Schema, Types } = require('mongoose');
 
 const storySchema = new Schema(
   {
-    user: {
-      type: Types.ObjectId,
-      ref: 'User',
-      required: [true, 'Story must have a creator'],
-    },
-    type: {
-      type: String,
-      enum: ['text', 'image'],
-      default: 'text',
-    },
+    user: { type: Types.ObjectId, ref: 'User', required: true },
+    type: { type: String, enum: ['text', 'image'], default: 'text' },
     background: String,
     image: String,
     text: String,
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
     expiresIn: {
       type: Date,
       default: function () {
@@ -26,15 +14,8 @@ const storySchema = new Schema(
       },
     },
   },
-  { toJSON: { virtuals: true }, toObject: { virtuals: true } }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
-
-// storySchema.virtual('_friendIds', {
-//   ref: 'Request',
-//   localField: 'user',
-//   foreignField: 'from',
-//   justOne: false,
-// });
 
 storySchema.pre('validate', function (next) {
   if (!this.img && !this.text) {
@@ -51,6 +32,8 @@ storySchema.pre(/^find/, function (next) {
   });
   next();
 });
+
+storySchema.index({ user: 1, expiresIn: 1 });
 
 const Story = model('Story', storySchema);
 

@@ -14,9 +14,6 @@ const userSchema = new Schema(
       required: [true, 'Please provide your lastname'],
       trim: true,
     },
-    slug: {
-      type: String,
-    },
     email: {
       type: String,
       required: [true, 'Please provide an email'],
@@ -46,42 +43,24 @@ const userSchema = new Schema(
         message: 'Passwords are not the same',
       },
     },
-    role: {
-      type: String,
-      default: 'user',
-      enum: ['user', 'admin'],
-    },
+    role: { type: String, default: 'user', enum: ['user', 'admin'] },
     bio: String,
+    slug: { type: String, unique: true },
+    birthdate: Date,
     picture: {
       type: String,
       default:
-        'https://res.cloudinary.com/dcltvh825/image/upload/v1727591596/users/szd1rbd4urol2ehagtsc.svg',
+        'https://res.cloudinary.com/mashro3/image/upload/v1755465957/default_user_himbox.png',
     },
     cover: {
       type: String,
       default:
         'https://res.cloudinary.com/dcltvh825/image/upload/v1727788976/users/nmc6eivzyjbucqrgrwn3.jpg',
     },
-    birthdate: Date,
-    active: {
-      type: Boolean,
-      default: true,
-      select: false,
-    },
-    isOnline: {
-      type: Boolean,
-      default: false,
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now,
-    },
+    active: { type: Boolean, default: true, select: false },
+    isOnline: { type: Boolean, default: false },
   },
-  { toJSON: { virtuals: true }, toObject: { virtuals: true } }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
 // Static Methods //
@@ -105,6 +84,10 @@ userSchema.pre('save', function (next) {
   this.slug = slugify(`${this.firstname}-${this.lastname}`, { lower: true });
   next();
 });
+
+// Indexes
+userSchema.index({ email: 1 }, { unique: true });
+userSchema.index({ slug: 1 }, { unique: true });
 
 const User = model('User', userSchema);
 

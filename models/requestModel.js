@@ -1,30 +1,15 @@
 const { model, Schema, Types } = require('mongoose');
 
-const requestSchema = new Schema({
-  from: {
-    type: Types.ObjectId,
-    ref: 'User',
-    required: ['true', 'Request must have a creator'],
+const requestSchema = new Schema(
+  {
+    from: { type: Types.ObjectId, ref: 'User', required: true },
+    to: { type: Types.ObjectId, ref: 'User', required: true },
+    status: { type: String, enum: ['pending', 'accepted'], default: 'pending' },
   },
-  to: {
-    type: Types.ObjectId,
-    ref: 'User',
-    required: ['true', 'Request must have a reciever'],
-  },
-  status: {
-    type: String,
-    enum: ['pending', 'accepted'],
-    default: 'pending',
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
+);
+
+requestSchema.index({ from: 1, to: 1 }, { unique: true });
 
 const Request = model('Request', requestSchema);
 

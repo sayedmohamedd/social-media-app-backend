@@ -2,32 +2,25 @@ const { model, Schema, Types } = require('mongoose');
 
 const likeSchema = new Schema(
   {
-    user: {
-      type: Types.ObjectId,
-      ref: 'User',
+    user: { type: Types.ObjectId, ref: 'User', required: true },
+    target: {
+      type: Schema.Types.ObjectId,
       required: true,
+      refPath: 'targetModel',
     },
-    post: {
-      type: Types.ObjectId,
-      ref: 'Post',
-    },
-    comment: {
-      type: Types.ObjectId,
-      ref: 'Comment',
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
+    targetModel: { type: String, required: true, enum: ['Post', 'Comment'] },
+    // post: { type: Types.ObjectId, ref: 'Post' },
+    // comment: { type: Types.ObjectId, ref: 'Comment' },
   },
-  { toJSON: { virtuals: true }, toObject: { virtuals: true } }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
+// Populate user
 likeSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'user',
     select: '-cover -email -role -createdAt -updatedAt -__v',
-  }); // Populate user
+  });
   next();
 });
 

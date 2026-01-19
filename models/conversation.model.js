@@ -9,27 +9,10 @@ const conversationSchema = new Schema(
         required: true,
       },
     ],
-    lastMessage: {
-      type: Types.ObjectId,
-      ref: 'Message',
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now,
-    },
+    lastMessage: { type: Types.ObjectId, ref: 'Message' },
   },
-  { toJSON: { virtuals: true }, toObject: { virtuals: true } }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
-
-// conversationSchema.virtual('messages', {
-//   ref: 'Message',
-//   localField: '_id',
-//   foreignField: 'conversation',
-// });
 
 conversationSchema.pre(/^find/, function (next) {
   this.populate(
